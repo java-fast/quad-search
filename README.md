@@ -17,8 +17,8 @@ In this experiment, we take `Arrays.binarySearch` in Java as reference. In `Quad
 - If the search value is found, we return the index which could be [0, n)
 - If the search value is no found, we return the insertion point as (-insertion-point - 1)
 
-## Main Observation
-TL;DR: A cache-friendly hybrid **quaternary search with SIMD instructions** can outperform `Arrays.binarySearch` by:
+## TL;DR: Main Observation
+A cache-friendly hybrid **quaternary search with SIMD instructions** can outperform `Arrays.binarySearch` by:
 - up to **19%** on Oracle JDK, up to **17%** on GraalVM on Apple M4 hardware
 - up to **X%** on Oracle JDK, up to **X%** on GraalVM on Intel/AMD hardware
 
@@ -30,7 +30,7 @@ To understand better why Binary Search is not Hardware-Friendly, let's have a lo
 - poor cache locality
 - difficult branch prediction
 
-![](/Users/yavuztas/git/java-fast/quad-search/assets/binary-search-access-pattern.jpg)
+![](assets/binary-search-access-pattern.jpg)
 
 As we notice, each access jumps to a distant location, so very little (or none) of the data stays in the cache.
 
@@ -56,11 +56,6 @@ In modern CPUs scanning 16–32 contiguous integers is extremely cache-friendly.
 - high Out-of-Order utilization
 
 Thus, sometimes a tiny linear scan can surprisingly outperform logarithmic search locally.
-
-Explain:
-- branch predictor stability
-- cache line behavior
-- contiguous memory traversal
 
 ## The Hybrid Quaternary Search Design
 
