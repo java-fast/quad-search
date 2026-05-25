@@ -3,19 +3,19 @@ An SIMD-powered search algorithm in Java that beats binary search for larger arr
 
 Inspired by Lemire's blog post: https://lemire.me/blog/2026/04/27/you-can-beat-the-binary-search/
 
-Thanks to Daniel Lemire for this interesting idea!
+Thanks to Daniel Lemire for this interesting idea.
 
 ## Motivation
 Binary search is theoretically optimal. Its runtime complexity is `O(log n)`. What it means by example: 
 - Minimal comparisons, only 30 operations for 1 billion entries.
 
-So, we can think of this, is there still any room for improvement? Probably less but still possible. Because:
+So, we can think of this; is there still any room for improvement? Probably less but still possible. Because:
 - Modern CPUs are not comparison-bound anymore.
 - Memory hierarchy and branch prediction dominate performance.
 
-In this experiment, we take `Arrays.binarySearch` in Java as reference. We tried 2 alternative implementations:
-1. `QuadSearch`: Quaternary narrowing -- predefined blocks are grouped into 4 regions until max. 3 blocks left and then continue with normal sequential search
-2. `SIMDQuadSearch`: Quaternary narrowing -- the same process above -- and then SIMD powered sequential search 
+In this experiment, we take `Arrays.binarySearch` in Java as reference. We tried two alternative implementations:
+1. `QuadSearch`: Quaternary narrowing – predefined blocks are grouped into four regions until max. 3 blocks left and then continue with normal sequential search
+2. `SIMDQuadSearch`: Quaternary narrowing – the same process above – and then SIMD powered sequential search 
 
 In both implementations, we keep the `Arrays.binarySearch` semantics the same:
 - If the search value is found, we return the index which could be `[0, n) when array size is n` 
@@ -23,8 +23,8 @@ In both implementations, we keep the `Arrays.binarySearch` semantics the same:
 
 ## TL;DR: Main Observation
 A cache-friendly hybrid **quaternary search with SIMD instructions** can outperform `Arrays.binarySearch` by:
-- up to **19%** on Oracle JDK, up to **17%** on GraalVM on Apple M4 ARM64 (128 bit Neon) hardware
-- up to **X%** on Oracle JDK, up to **X%** on GraalVM on x86-64 AMD (256 bit AVX2) hardware
+- up to **19%** on Oracle JDK, up to **17%** on GraalVM on Apple M4 ARM64 (Neon 128-bit) hardware
+- up to **X%** on Oracle JDK, up to **X%** on GraalVM on x86-64 AMD (AVX2 256-bit) hardware
 
 ## Why Classic Binary Search is not Hardware-Friendly
 
@@ -78,13 +78,41 @@ Quaternary narrowing
 ↓
 Linear block scan with SIMD
 ```
-### Quaternary Interpolation
-// TODO
+### Quaternary Narrowing
+Quaternary narrowing reduces the search space by probing three evenly distributed pivot points instead of a single midpoint as in classic binary search. On each iteration, the algorithm divides the remaining range into four regions and quickly narrows the candidate space down to one quarter of its previous size. 
 
-### Applying SIMD instructions
-In Java by using Project Panama's Vector API, we can instruct the compiler to use SIMD registers and possibly get the benefit of instruction level parallelism. Thus, we can read and process more than 8 bytes, like 16 or 32 bytes depending on the underlying hardware.
+Once only one to three small blocks remain, the search switches to a localized linear or SIMD-assisted scan. This hybrid approach trades a few additional comparisons for significantly better cache locality, more predictable memory access patterns, and reduced branch entropy on modern CPUs.
 
-Hence, the last remaining blocks (one to three, each has a size of 16) can be read by using Vector API:
+### Implementing SIMD algorithms in Java
+In Java by using Project Panama's [Vector API](https://openjdk.org/jeps/426), we can tell the compiler to use vector instructions and get the performance benefit of SIMD on supported CPU architectures. Thus, we can read and compare more than 8 bytes, like 16 or 32 bytes depending on the underlying hardware.
+
+Hence, the last remaining blocks (max. three blocks each has a size of 16) can be read by using Vector API:
 ```java
-// TODO sample code
+/**
+ * Search inside one 16-element block.
+ * <p>
+ * Returns:
+ * found index
+ * OR -(insertionPoint + 1)
+ */
+private static int blockSearch(int[] array, int base, int target) {
+    final int step = SPECIES.length();
+    for (int offset = 0; offset < BLOCK_SIZE; offset += step) {
+        final int indexBase = base + offset;
+        final IntVector values = IntVector.fromArray(SPECIES, array, indexBase);
+
+        final VectorMask<Integer> geMask = values.compare(VectorOperators.GE, target);
+        final long bits = geMask.toLong();
+
+        if (bits != 0) {
+            final int lane = Long.numberOfTrailingZeros(bits);
+            final int index = indexBase + lane;
+            final int value = array[index];
+
+            return (value == target) ? index : -(index + 1);
+        }
+    }
+
+    return -((base + BLOCK_SIZE) + 1);
+}
 ```
