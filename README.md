@@ -50,7 +50,7 @@ A cache-friendly hybrid **quaternary search with SIMD instructions** can outperf
 - up to **24%** on Oracle JDK, up to **29%** on GraalVM on x86-64 AMD (AVX2 256-bit) hardware
 - **p99** values are better than default binary search almost in all test cases
 
-You can check the results in here: [charts](https://java-fast.github.io/quad-search/). 
+You can check the results in here: [charts](https://java-fast.github.io/quad-search/)
 
 Alternatively, the JMH results you can see over here: [docs/results/](docs/results/)  
 
