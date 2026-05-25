@@ -151,46 +151,46 @@
             simdQuadSearch:     [101.364, 139.867, 165.002, 154.669, 207.313, 245.206, 285.412, 302.927, 326.200]
         }).on('container1')
 
-        new ArraySearchBenchmarkChart('Apple M4 - Oracle JDK - Hot Cache', arraySizes, {
+        new ArraySearchBenchmarkChart('Apple M4 - Oracle JDK - Warm Cache', arraySizes, {
             arraysBinarySearch: [32.540, 39.762, 63.181, 74.147, 101.803, 134.836, 156.829, 194.662, 230.118],
             quadSearch:         [37.439, 35.365, 52.267, 72.034, 100.602, 122.729, 148.312, 171.876, 209.947],
             simdQuadSearch:     [24.496, 35.922, 48.177, 64.632, 101.051, 115.810, 147.362, 181.131, 202.005]
         }).on('container2')
 
         new ArraySearchBenchmarkChart('Apple M4 - GraalVM - Cold Cache', arraySizes, {
-            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            arraysBinarySearch: [115.081, 146.967, 181.758, 183.899, 240.503, 274.759, 308.104, 341.951, 362.448],
+            quadSearch:         [120.612, 161.717, 187.092, 190.904, 215.735, 264.861, 300.859, 320.274, 342.253],
+            simdQuadSearch:     [99.626, 136.383, 161.420, 164.778, 201.196, 247.359, 298.931, 302.596, 328.831]
         }).on('container3')
 
-        new ArraySearchBenchmarkChart('Apple M4 - GraalVM - Hot Cache', arraySizes, {
-            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        new ArraySearchBenchmarkChart('Apple M4 - GraalVM - Warm Cache', arraySizes, {
+            arraysBinarySearch: [33.388, 42.729, 51.171, 74.656, 100.656, 134.983, 163.629, 196.896, 239.097],
+            quadSearch:         [27.962, 39.342, 51.484, 73.221, 101.530, 120.870, 148.699, 180.521, 224.654],
+            simdQuadSearch:     [34.412, 36.769, 49.129, 72.620, 101.153, 120.886, 153.136, 174.340, 202.336]
         }).on('container4')
 
         new ArraySearchBenchmarkChart('x86-64 AMD - Oracle JDK - Cold Cache', arraySizes, {
-            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            arraysBinarySearch: [508.945, 672.439, 729.579, 774.362, 813.648, 884.149, 1047.886, 1199.202, 1192.757],
+            quadSearch:         [440.564, 549.441, 639.647, 680.014, 710.456, 759.260, 917.179, 1097.341, 1020.096],
+            simdQuadSearch:     [412.604, 523.740, 625.760, 665.740, 731.783, 759.921, 925.742, 1091.250, 1053.785]
         }).on('container5')
 
-        new ArraySearchBenchmarkChart('x86-64 AMD - Oracle JDK - Hot Cache', arraySizes, {
-            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        new ArraySearchBenchmarkChart('x86-64 AMD - Oracle JDK - Warm Cache', arraySizes, {
+            arraysBinarySearch: [106.480, 149.828, 202.130, 255.782, 300.698, 345.958, 417.653, 460.721, 542.745],
+            quadSearch:         [91.000, 134.226, 162.426, 231.221, 268.809, 309.136, 360.392, 429.850, 491.359],
+            simdQuadSearch:     [83.893, 126.893, 153.170, 232.889, 258.192, 301.065, 359.631, 425.068, 482.919]
         }).on('container6')
 
         new ArraySearchBenchmarkChart('x86-64 AMD - GraalVM - Cold Cache', arraySizes, {
-            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+            arraysBinarySearch: [525.862, 659.617, 718.084, 696.453, 759.637, 817.547, 915.446, 1175.194, 1142.175],
+            quadSearch:         [386.556, 478.330, 560.623, 605.023, 677.431, 743.217, 877.601, 1105.755, 1051.452],
+            simdQuadSearch:     [424.525, 466.574, 566.731, 611.913, 666.912, 754.968, 885.839, 1087.933, 1066.932]
         }).on('container7')
 
-        new ArraySearchBenchmarkChart('x86-64 AMD - GraalVM - Hot Cache', arraySizes, {
-            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        new ArraySearchBenchmarkChart('x86-64 AMD - GraalVM - Warm Cache', arraySizes, {
+            arraysBinarySearch: [113.332, 150.931, 197.172, 278.256, 318.858, 347.227, 410.564, 485.779, 544.846],
+            quadSearch:         [103.058, 155.363, 175.564, 260.983, 274.760, 327.577, 375.160, 447.609, 508.225],
+            simdQuadSearch:     [89.765, 137.456, 206.206, 247.814, 267.874, 320.692, 379.552, 433.466, 496.425]
         }).on('container8')
     </script>
 

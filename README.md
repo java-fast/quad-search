@@ -9,7 +9,7 @@ Thanks to Daniel Lemire for this interesting idea.
 Binary search is theoretically optimal. Its runtime complexity is `O(log n)`. What it means by example: 
 - Minimal comparisons, only 30 operations for 1 billion entries.
 
-So, we can think of this; is there still any room for improvement? Probably less but still possible. Because:
+So, we can think of this; is there still any room for improvement? Probably, yes. Because:
 - Modern CPUs are not comparison-bound anymore.
 - Memory hierarchy and branch prediction dominate performance.
 
@@ -24,14 +24,31 @@ In both implementations, we keep the `Arrays.binarySearch` semantics the same:
 ## Benchmark
 In the benchmarks, we use different sizes of arrays; 4k, 8k, 16k, 32k, 64k, 128k, 256k, 512k, and 1m (from 2^12 to 2^20 — 4096 to 1,048,576) 
 
-Also, we run two different benchmarks to test cold and hot cache behavour:
+In our randomly generated test data, the count of arrays decreases proportionally while the size increases, like in the pattern below:
+```
+| Count | Array Size |
+|-------|------------|
+| 256k  | 4k         |
+| 128k  | 8k         |
+| 64k   | 16k        |
+| 32k   | 32k        |
+| 16k   | 64k        |
+| 8k    | 128k       |
+| 4k    | 256k       |
+| 2k    | 512k       |
+| 1k    | 1m         |
+```
+We took this approach because it is aligned with the real world use-cases. Usually, you have many but small-sized arrays, like in Vector databases, or you have few but larger arrays, such as per-column sorted data structures in OLAP/columnar databases and large inverted index posting lists in search engines.
+
+Additionally, we run two different benchmarks to test cold and warm cache behavour:
 1. Cold cache behavour: Search an array once, continue with the next one
-2. Hot cache behavour: Search an array 100 times before going on with the next one
+2. Warm cache behavour: Search an array 100 times before going on with the next one
 
 ## TL;DR: Main Observation
 A cache-friendly hybrid **quaternary search with SIMD instructions** can outperform `Arrays.binarySearch` by:
-- up to **19%** on Oracle JDK, up to **17%** on GraalVM on Apple M4 ARM64 (Neon 128-bit) hardware
-- up to **X%** on Oracle JDK, up to **X%** on GraalVM on x86-64 AMD (AVX2 256-bit) hardware
+- up to **25%** on Oracle JDK, up to **16%** on GraalVM on Apple M4 ARM64 (Neon 128-bit) hardware
+- up to **24%** on Oracle JDK, up to **29%** on GraalVM on x86-64 AMD (AVX2 256-bit) hardware
+- **p99** values are better than default binary search almost in all test cases
 
 ## Why Classic Binary Search is not Hardware-Friendly
 
