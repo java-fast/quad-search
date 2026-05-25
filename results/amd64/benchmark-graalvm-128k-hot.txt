@@ -1,0 +1,37 @@
+Benchmark                                                              Mode      Cnt        Score   Error   Units
+ArraySearchHotCacheBenchmark.binarySearchDefault                     sample  2050743      347.227 ± 7.719   ns/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:gc.alloc.rate       sample       30        0.084 ± 0.024  MB/sec
+ArraySearchHotCacheBenchmark.binarySearchDefault:gc.alloc.rate.norm  sample       30        0.020 ± 0.006    B/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:gc.count            sample       30          ≈ 0          counts
+ArraySearchHotCacheBenchmark.binarySearchDefault:p0.00               sample                29.000           ns/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:p0.50               sample               250.000           ns/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:p0.90               sample               740.000           ns/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:p0.95               sample               880.000           ns/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:p0.99               sample              1270.000           ns/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:p0.999              sample              8736.000           ns/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:p0.9999             sample             18784.000           ns/op
+ArraySearchHotCacheBenchmark.binarySearchDefault:p1.00               sample           3018752.000           ns/op
+ArraySearchHotCacheBenchmark.quadSearch                              sample  2000773      327.577 ± 2.368   ns/op
+ArraySearchHotCacheBenchmark.quadSearch:gc.alloc.rate                sample       30        0.078 ± 0.024  MB/sec
+ArraySearchHotCacheBenchmark.quadSearch:gc.alloc.rate.norm           sample       30        0.019 ± 0.006    B/op
+ArraySearchHotCacheBenchmark.quadSearch:gc.count                     sample       30          ≈ 0          counts
+ArraySearchHotCacheBenchmark.quadSearch:p0.00                        sample                29.000           ns/op
+ArraySearchHotCacheBenchmark.quadSearch:p0.50                        sample               250.000           ns/op
+ArraySearchHotCacheBenchmark.quadSearch:p0.90                        sample               680.000           ns/op
+ArraySearchHotCacheBenchmark.quadSearch:p0.95                        sample               800.000           ns/op
+ArraySearchHotCacheBenchmark.quadSearch:p0.99                        sample              1160.000           ns/op
+ArraySearchHotCacheBenchmark.quadSearch:p0.999                       sample              8400.000           ns/op
+ArraySearchHotCacheBenchmark.quadSearch:p0.9999                      sample             16736.000           ns/op
+ArraySearchHotCacheBenchmark.quadSearch:p1.00                        sample           1095680.000           ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch                          sample  2131887      320.692 ± 1.536   ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:gc.alloc.rate            sample       30        0.079 ± 0.025  MB/sec
+ArraySearchHotCacheBenchmark.simdQuadSearch:gc.alloc.rate.norm       sample       30        0.018 ± 0.006    B/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:gc.count                 sample       30          ≈ 0          counts
+ArraySearchHotCacheBenchmark.simdQuadSearch:p0.00                    sample                30.000           ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:p0.50                    sample               240.000           ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:p0.90                    sample               660.000           ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:p0.95                    sample               790.000           ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:p0.99                    sample              1140.000           ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:p0.999                   sample              8416.000           ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:p0.9999                  sample             17849.958           ns/op
+ArraySearchHotCacheBenchmark.simdQuadSearch:p1.00                    sample            470528.000           ns/op

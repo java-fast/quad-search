@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Array Search Benchmark Comparison</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f5f5f5;
+        }
+        .group {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .container {
+            width: 100%;
+            height: 600px;
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+    </style>
+  </head>
+  <body>
+    <script>
+        function ArraySearchBenchmarkChart(title, arraySizes, benchmarkData) {
+            const config = {
+                chart: {
+                    type: 'line'
+                },
+
+                title: {
+                    text: title
+                },
+
+                xAxis: {
+                    categories: arraySizes,
+                    title: {
+                        text: 'Array Size'
+                    }
+                },
+
+                yAxis: {
+                    title: {
+                        text: 'ns/op'
+                    }
+                },
+
+                tooltip: {
+                    shared: true,
+                    useHTML: true,
+                    formatter: function () {
+                        const binarySearchPoint = this.points.find(
+                            p => p.series.name === 'Arrays.binarySearch'
+                        );
+
+                        const baseline = binarySearchPoint.y;
+
+                        let html = `<b>${arraySizes[this.x]}</b><br/>`;
+
+                        this.points.forEach(point => {
+                            const value = point.y;
+
+                            // binarySearch baseline
+                            const diff = ((baseline - value) / baseline) * 100;
+
+                            let diffText = '';
+                            let color = '#999';
+
+                            if (point.series.name !== 'Arrays.binarySearch') {
+                                const rounded = Math.round(diff);
+
+                                if (rounded > 0) {
+                                    diffText = `(+${rounded}% faster)`;
+                                    color = 'green';
+                                } else if (rounded < 0) {
+                                    diffText = `(${rounded}% slower)`;
+                                    color = 'red';
+                                } else {
+                                    diffText = '(same)';
+                                }
+                            }
+
+                            html += `
+                          <span style="color:${point.color}">
+                            ● ${point.series.name}
+                          </span>:
+                          <b>${value} ns/op</b>
+                          <span style="color:${color}">
+                            ${diffText}
+                          </span>
+                          <br/>
+                        `;
+                        });
+
+                        return html;
+                    }
+                },
+
+                series: [
+                    {
+                        name: 'Arrays.binarySearch',
+                        data: benchmarkData.arraysBinarySearch,
+                        color: '#008AF1'
+                    },
+                    {
+                        name: 'QuadSearch',
+                        data: benchmarkData.quadSearch,
+                        color: '#5D1BF1'
+                    },
+                    {
+                        name: 'SimdQuadSearch',
+                        data: benchmarkData.simdQuadSearch,
+                        color: '#097c60'
+                    }
+                ]
+            }
+            return {
+                "on": (elementId) => {
+                  Highcharts.chart(elementId, config);
+                }
+            }
+        }
+    </script>
+
+    <div class="group">
+      <div class="container" id="container1"></div>
+      <div class="container" id="container2"></div>
+      <div class="container" id="container3"></div>
+      <div class="container" id="container4"></div>
+    </div>
+    <div class="group">
+      <div class="container" id="container5"></div>
+      <div class="container" id="container6"></div>
+      <div class="container" id="container7"></div>
+      <div class="container" id="container8"></div>
+    </div>
+
+    <script>
+        const arraySizes = ['4k', '8k', '16k', '32k', '64k', '128k', '256k', '512k', '1m'];
+
+        new ArraySearchBenchmarkChart('Apple M4 - Oracle JDK - Cold Cache', arraySizes, {
+            arraysBinarySearch: [110.514, 152.680, 181.086, 191.208, 243.088, 273.901, 312.225, 342.261, 366.746],
+            quadSearch:         [130.880, 159.680, 191.687, 179.529, 230.386, 261.960, 300.010, 321.935, 339.013],
+            simdQuadSearch:     [101.364, 139.867, 165.002, 154.669, 207.313, 245.206, 285.412, 302.927, 326.200]
+        }).on('container1')
+
+        new ArraySearchBenchmarkChart('Apple M4 - Oracle JDK - Hot Cache', arraySizes, {
+            arraysBinarySearch: [32.540, 39.762, 63.181, 74.147, 101.803, 134.836, 156.829, 194.662, 230.118],
+            quadSearch:         [37.439, 35.365, 52.267, 72.034, 100.602, 122.729, 148.312, 171.876, 209.947],
+            simdQuadSearch:     [24.496, 35.922, 48.177, 64.632, 101.051, 115.810, 147.362, 181.131, 202.005]
+        }).on('container2')
+
+        new ArraySearchBenchmarkChart('Apple M4 - GraalVM - Cold Cache', arraySizes, {
+            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }).on('container3')
+
+        new ArraySearchBenchmarkChart('Apple M4 - GraalVM - Hot Cache', arraySizes, {
+            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }).on('container4')
+
+        new ArraySearchBenchmarkChart('x86-64 AMD - Oracle JDK - Cold Cache', arraySizes, {
+            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }).on('container5')
+
+        new ArraySearchBenchmarkChart('x86-64 AMD - Oracle JDK - Hot Cache', arraySizes, {
+            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }).on('container6')
+
+        new ArraySearchBenchmarkChart('x86-64 AMD - GraalVM - Cold Cache', arraySizes, {
+            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }).on('container7')
+
+        new ArraySearchBenchmarkChart('x86-64 AMD - GraalVM - Hot Cache', arraySizes, {
+            arraysBinarySearch: [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            quadSearch:         [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            simdQuadSearch:     [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        }).on('container8')
+    </script>
+
+  </body>
+</html>
