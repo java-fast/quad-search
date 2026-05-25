@@ -19,7 +19,14 @@ In this experiment, we take `Arrays.binarySearch` in Java as reference. We tried
 
 In both implementations, we keep the `Arrays.binarySearch` semantics the same:
 - If the search value is found, we return the index which could be `[0, n) when array size is n` 
-- If the search value is no found, we return the insertion point as `(-insertion-point - 1)`
+- If the search value is not found, we return the insertion point as `(-insertion-point - 1)`
+
+## Benchmark
+In the benchmarks, we use different sizes of arrays; 4k, 8k, 16k, 32k, 64k, 128k, 256k, 512k, and 1m (from 2^12 to 2^20 — 4096 to 1,048,576) 
+
+Also, we run two different benchmarks to test cold and hot cache behavour:
+1. Cold cache behavour: Search an array once, continue with the next one
+2. Hot cache behavour: Search an array 100 times before going on with the next one
 
 ## TL;DR: Main Observation
 A cache-friendly hybrid **quaternary search with SIMD instructions** can outperform `Arrays.binarySearch` by:
