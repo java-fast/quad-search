@@ -44,6 +44,8 @@ Additionally, we run two different benchmarks to test cold and warm cache behavo
 1. Cold cache behavour: Search an array once, continue with the next one
 2. Warm cache behavour: Search an array 100 times before going on with the next one
 
+All the benchmarks we run in the latest Java 25 version (by the time released in [sdkman](https://sdkman.io/)) on both Oracle JDK and GraalVM vendors.
+
 ## TL;DR: Main Observation
 A cache-friendly hybrid **quaternary search with SIMD instructions** can outperform `Arrays.binarySearch` by:
 - up to **25%** on Oracle JDK, up to **16%** on GraalVM on Apple M4 ARM64 (Neon 128-bit) hardware
