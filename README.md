@@ -9,18 +9,22 @@ Thanks to Daniel Lemire for this interesting idea!
 Binary search is theoretically optimal. Its runtime complexity is `O(log n)`. What it means by example: 
 - Minimal comparisons, only 30 operations for 1 billion entries.
 
-So, we can think of is there still any room for improvement. Probably less but still possible. Because:
+So, we can think of this, is there still any room for improvement? Probably less but still possible. Because:
 - Modern CPUs are not comparison-bound anymore.
 - Memory hierarchy and branch prediction dominate performance.
 
-In this experiment, we take `Arrays.binarySearch` in Java as reference. In `QuadSearch` and `SIMDQuadSearch` implementations, we keep the `Arrays.binarySearch` semantics as the following:
-- If the search value is found, we return the index which could be [0, n)
-- If the search value is no found, we return the insertion point as (-insertion-point - 1)
+In this experiment, we take `Arrays.binarySearch` in Java as reference. We tried 2 alternative implementations:
+1. `QuadSearch`: Quaternary narrowing -- predefined blocks are grouped into 4 regions until max. 3 blocks left and then continue with normal sequential search
+2. `SIMDQuadSearch`: Quaternary narrowing -- the same process above -- and then SIMD powered sequential search 
+
+In both implementations, we keep the `Arrays.binarySearch` semantics the same:
+- If the search value is found, we return the index which could be `[0, n) when array size is n` 
+- If the search value is no found, we return the insertion point as `(-insertion-point - 1)`
 
 ## TL;DR: Main Observation
 A cache-friendly hybrid **quaternary search with SIMD instructions** can outperform `Arrays.binarySearch` by:
-- up to **19%** on Oracle JDK, up to **17%** on GraalVM on Apple M4 hardware
-- up to **X%** on Oracle JDK, up to **X%** on GraalVM on Intel/AMD hardware
+- up to **19%** on Oracle JDK, up to **17%** on GraalVM on Apple M4 ARM64 (128 bit Neon) hardware
+- up to **X%** on Oracle JDK, up to **X%** on GraalVM on x86-64 AMD (256 bit AVX2) hardware
 
 ## Why Classic Binary Search is not Hardware-Friendly
 
@@ -37,7 +41,7 @@ As we notice, each access jumps to a distant location, so very little (or none) 
 Therefore, cache locality is almost never preserved.
 
 ### Theory vs Real Hardware
-In theory, binary search is very optimal that makes fewer comparisons all the time. Considering an array of 1 billion entries, it's still only **31** operations (2^30 = 1,073,741,824 ~= 1B) to scan the whole data. 
+In theory, binary search is very optimal that makes fewer comparisons all the time. Considering an array of 1 billion entries, it's still only **30** operations (2^30 = 1,073,741,824 ~= 1B) to scan the entire array. 
 
 However, fewer comparisons do not necessarily mean lower latency. Modern CPUs prefer:
 - sequential memory access
